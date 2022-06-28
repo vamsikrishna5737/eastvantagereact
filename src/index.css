@@ -12,10 +12,15 @@ code {
     monospace;
 }
 
-.top{
+.data{
   display: flex;
-  position: relative;
-  top: 20px;
-  justify-content:center;
-}
+  flex-direction: column;
+  color: green;
+  align-items: center;
+  margin-top: 10%;
 
+}
+button{
+  color: white;
+  background-color: red;
+}

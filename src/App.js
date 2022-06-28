@@ -1,55 +1,37 @@
 import React from 'react'
-import { useState } from 'react'
+import {useState ,useEffect } from 'react'
+import axios from 'axios';
 import './index.css';
 function App() {
-  const [obj1,setObj1]=useState([])
-  const handlesubmit = (e)=>{
-    e.preventDefault()
-    const val ={
-      "name":e.target.elements.name.value,
-      "location":e.target.elements.location.value
-    }
-    setObj1([...obj1,val])
-    }
-  const delt = (idx)=>{
-    console.log(idx)
-    obj1.splice(idx,1)
-    setObj1([...obj1])
+  const [user,setUser] = useState(localStorage.getItem("user"))
+  const [mail,setMail] = useState(localStorage.getItem("mail"))
+  const getData = async () =>{
+      await axios.get('https://randomuser.me/api').then(async (res)=>{
+      const {email} = await res.data.results[0]
+      const {name} = await  res.data.results[0]
+      const name1 =await  name.title+" "+name.first+" "+name.last
+      await localStorage.setItem("user",name1)
+      await localStorage.setItem("mail",email)
+      await setUser(name1)
+      await setMail(email)
+      console.log(name1,email)
+    } )
 
   }
-  
-  
+  useEffect(()=> {
+    if (localStorage.getItem("user")){
+      return
+    } else {
+      getData()
+    } 
+  },[])
+
   return (
-    <div>
-    <form className='top' onSubmit={handlesubmit}>
-      <label for="name"><strong>Name</strong></label>
-      <input type="text" id="name" name="name" placeholder="enter name"/>
-      <label style={{marginLeft:"10px"}}for="location"><strong>Location</strong></label>
-      <input type="text" id="location" name="location" placeholder="enter location"/>
-      <button type ="submit">add</button>
-    </form>
-    <table style={{margin:"30px 0 0 35%",width:"30%"}} border={4}>
-      <thead>
-        <tr className='box'>
-          <th>name</th>
-          <th>location</th>
-          <th>delete</th>
-        </tr>
-      </thead>
-    <tbody>
-      {obj1.map((val,idx)=> (
-        <tr key={idx}>
-          <th>{val.name}</th>
-          <th>{val.location}</th>
-          <th><button onClick={()=>{delt(idx)}}>del</button></th>
-        </tr>
-      ))}
-
-    </tbody>
-    </table>
+    <div className='data'>
+      <h1><strong style={{color:"black"}}>Name:</strong> {user}</h1>
+      <h1><strong style={{color:"black"}}>Email:</strong> {mail}</h1>
+      <button onClick={()=>{getData()}}>Refresh</button>
     </div>
-
-
   )
 }
 

@@ -4,6 +4,8 @@
   box-sizing: border-box;
 }
 
-.app{
+.data{
   display: flex;
+  color: aqua;
+
 }
